@@ -7,6 +7,7 @@ This project is for the automation of the creation of Resource Packs for minecra
 To-Do:
 -------------
 General:
+* Create online utility
 * Fork 2D-ImageFiler, stripping it down to just a command line based XBR scalar
 * Multithreading
 * Optimize Image Processing:

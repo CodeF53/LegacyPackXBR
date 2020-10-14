@@ -9,6 +9,11 @@ To-Do:
 General:
 * Fork 2D-ImageFiler, stripping it down to just a command line based XBR scalar
 * Multithreading
+* Optimize Image Processing:
+ * contains_transparency()
+ * split_rgb_a()
+ * merge_rgb_a()
+ * cull_transparency()
 
 PackXBR:
 * Modify pack.mcmeta

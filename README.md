@@ -8,7 +8,7 @@ To-Do:
 -------------
 General:
 * Create online utility
-* Fork 2D-ImageFiler, stripping it down to just a command line based XBR scalar
+* Switch to XBRz in 2D-ImageFilter
 * Multithreading
 * Optimize Image Processing:
  * contains_transparency()

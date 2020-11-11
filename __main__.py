@@ -1,4 +1,5 @@
 # libraries
+# libraries
 import msvcrt
 import sys
 from shutil import rmtree
@@ -10,6 +11,7 @@ import glob
 from image_processing import process_image
 import file_processing as fp
 import console_printing as cp
+
 
 text = {
     "RED--": u"\u001b[31m",
@@ -73,7 +75,7 @@ fp.unzip(f"{root}{packName}.zip", f"{root}temp")
 
 # copy files into final folder
 print(cp.ctr("moving non-image files from temporary folder to final pack") + "\n")
-copy_tree(f"{root}temp", f"{root}{packName}_xbr", update=1)
+copy_tree(f"{root}temp", f"{root}XBR {packName}", update=1)
 
 # overwrite images in final folder with processed images from temp folder
 print(cp.ctr("Processing all images:"))
@@ -85,7 +87,7 @@ for i in range(totalImages):
 
     file_name = images[i][images[i].rfind("\\") + 1:]
     input_path = images[i][:images[i].rfind("\\") + 1]
-    output_path = input_path.replace("temp", f"{packName}_xbr")
+    output_path = input_path.replace("temp", f"XBR {packName}")
 
     process_image(input_path, output_path, file_name)
     cp.remove_lines(2)

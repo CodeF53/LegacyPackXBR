@@ -2,6 +2,7 @@
 import os
 import sys
 import subprocess
+import numpy as np
 from PIL import Image
 
 # Custom Shit
@@ -13,6 +14,9 @@ import console_printing as cp
 #   otherwise, it upscales the image, then culls the transparency introduced by scaling
 def process_image(input_path, output_path, image_name):
     print(cp.ral(f"{image_name}"))
+
+    print(cp.ral("tiling image        "))
+    tile_image(input_path, image_name, 2)
 
     # make directory for shit to go in
     os.makedirs(output_path, exist_ok=True)
@@ -39,7 +43,7 @@ def process_image(input_path, output_path, image_name):
         # Cleanup
         os.remove(f"{output_path}{image_name_alpha}")
         os.remove(f"{output_path}{image_name_rgb}")
-        cp.remove_lines(6)
+        cp.remove_lines(7)
     else:
         print(cp.ral("scaling image        "))
         # upscale image
@@ -48,7 +52,37 @@ def process_image(input_path, output_path, image_name):
         print(cp.ral("culling transparency        "))
         # cull transparency from upscaled image
         cull_transparency(output_path, image_name)
-        cp.remove_lines(4)
+        cp.remove_lines(5)
+
+    print(cp.ral("finalizing image        "))
+    trim_tile(input_path, image_name, 8)
+
+    cp.remove_line()
+
+
+# wraps image with border_size pixel border of itself (like a tiled plane of the image)
+def tile_image(path, image_name, border_size):
+    img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
+    img_width, img_height = [len(img[0, :]), len(img)]
+
+    # img[y,x]
+    # vertical sandwich  bottom border_size lines -- image -- top border_size lines
+    img = np.vstack([img[img_height - border_size:img_height, :], img, img[0:border_size, :]])
+
+    # horizontal sandwich  right border_size lines -- image -- left border_size lines
+    img = np.hstack([img[:, img_width - border_size:img_width], img, img[:, 0:border_size]])
+
+    Image.fromarray(img).save(f"{path}{image_name}")
+
+
+# trims num_pixels from all edges of input image
+def trim_tile(path, image_name, num_pixels):
+    img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
+    img_width, img_height = [len(img[0, :]), len(img)]
+
+    img = img[num_pixels:img_height - num_pixels, num_pixels:img_width - num_pixels]
+
+    Image.fromarray(img).save(f"{path}{image_name}")
 
 
 # splits image into rgb and alpha channels, saving under image_name_rgb and image_name_alpha
@@ -120,7 +154,7 @@ def resource_path(relative_path):
 
 # Calls ImageResizer.exe with the proper args
 def xbr_4x(input_path, output_path, image_name):
-    arguments = f"/load \"{input_path}{image_name}\" /resize auto \"XBR 4x(1, thresholds=1, hbounds=wrap, vbounds=wrap)\" /save \"{output_path}{image_name}\" "
+    arguments = f"/load \"{input_path}{image_name}\" /resize auto \"XBRz 4x(1, thresholds=1, hbounds=wrap, vbounds=wrap)\" /save \"{output_path}{image_name}\" "
     subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
         resource_path("ImageResizer.exe ") +  # call in a way that works with files packed into an exe
         arguments,  # args for 4x vertically and horizontally wrapped, XBR

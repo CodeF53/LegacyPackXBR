@@ -4,6 +4,13 @@ import sys
 
 term_size = shutil.get_terminal_size()[0] - 1
 
+text = {
+    "RED--": u"\u001b[31m",
+    "GREEN": u"\u001b[32m",
+    "NORM-": u"\u001b[0m",
+    "CYAN-": u"\u001b[36m",
+    "BLUE-": u"\u001b[34m"
+}
 
 def remove_lines(num_lines):
     for i in range(num_lines):

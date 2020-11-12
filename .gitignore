@@ -6,3 +6,6 @@ ImageResizer.exe.config
 ImageResizer.pdb
 config.xml
 output/
+dist/
+PackXBR.spec
+build/

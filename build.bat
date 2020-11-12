@@ -1,1 +1,1 @@
-pyinstaller --noconfirm --onefile --console --icon "C:/Users/Chase/Documents/GitHub/PackXBR/packXBR.ico" --name "PackXBR" --add-data "C:/Users/Chase/Documents/GitHub/PackXBR/ScalerTest.exe;."  "C:/Users/Chase/Documents/GitHub/PackXBR/__main__.py"
+pyinstaller --noconfirm --onefile --console --icon "C:/Users/Chase/Documents/GitHub/PackXBR/packXBR.ico" --name "PackXBR" --add-data "C:/Users/Chase/Documents/GitHub/PackXBR/xbrzscale.exe;."  "C:/Users/Chase/Documents/GitHub/PackXBR/__main__.py"

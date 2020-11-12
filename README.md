@@ -13,7 +13,7 @@ Open `PackXBR.exe` or `__main__.py`, press enter, then enter the path to a Resou
 Building
 -------------
 Requirements:
-* Add [ScalarTest.exe](https://sourceforge.net/projects/xbrz/) to main folder
+* a compiled windows [xbrzscale](https://github.com/atheros/xbrzscale) binary
 * Python3
 * msvcrt
 * shutil
@@ -47,8 +47,10 @@ ModPackXBR:
 
 Credits:
 -------------
-* [Zenju's xBRz and his ScalerTest binary](https://sourceforge.net/projects/xbrz/)
-  *neat implementation of many scaling algorithms.
+* [Zenju's xBRz](https://sourceforge.net/projects/xbrz/)
+  * A nice xBR modification
+* [xBRzScale](https://github.com/atheros/xbrzscale)
+  * A barebones implementation of xBRz
 * Misterk7_-
   * Creator of VanillaXBR, a the pack that inspired this.
     * if you are interested enough to read to here, [you should join the discord](https://discord.gg/jruhHac)

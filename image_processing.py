@@ -152,11 +152,10 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-# Calls ScalerTest.exe with the proper args
+# Calls xbrzscale.exe with the proper args
 def xbr_4x(input_path, output_path, image_name):
-    arguments = f"-4xbrz \"{input_path}{image_name}\" \"{output_path}{image_name}\""
-    # arguments = f"/load \"{input_path}{image_name}\" /resize auto \"XBRz 4x\" /save \"{output_path}{image_name}\" "
+    arguments = f"4 \"{input_path}{image_name}\" \"{output_path}{image_name}\""
     subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
-        resource_path("ScalerTest.exe ") +  # call in a way that works with files packed into an exe
-        arguments,  # args for 4x vertically and horizontally wrapped, XBR
+        resource_path("xbrzscale.exe ") +  # call in a way that works with files packed into an exe
+        arguments,  # args for 4x xBRz on our image
         creationflags=0x08000000)  # don't show the console window doing this.

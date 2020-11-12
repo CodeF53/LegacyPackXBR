@@ -1,5 +1,3 @@
-print("launching:")
-
 # libraries
 import msvcrt
 import sys
@@ -12,8 +10,6 @@ import glob
 from image_processing import process_image
 import file_processing as fp
 import console_printing as cp
-
-cp.remove_line()
 
 
 # asks for a ResourcePack zip until it gets a valid zip file

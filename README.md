@@ -13,6 +13,7 @@ Open `PackXBR.exe` or `__main__.py`, press enter, then enter the path to a Resou
 Building
 -------------
 Requirements:
+* Add [ScalarTest.exe](https://sourceforge.net/projects/xbrz/) to main folder
 * Python3
 * msvcrt
 * shutil
@@ -46,8 +47,8 @@ ModPackXBR:
 
 Credits:
 -------------
-* [2D-ImageFilter](https://github.com/Hawkynt/2dimagefilter)
-  * A utility for scaling algorithms with some great command-line integration
+* [Zenju's xBRz and his ScalerTest binary](https://sourceforge.net/projects/xbrz/)
+  *neat implementation of many scaling algorithms.
 * Misterk7_-
   * Creator of VanillaXBR, a the pack that inspired this.
     * if you are interested enough to read to here, [you should join the discord](https://discord.gg/jruhHac)

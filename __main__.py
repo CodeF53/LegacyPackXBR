@@ -75,15 +75,15 @@ else:
 
 # unzip pack
 print("\n" + cp.text["NORM-"] + cp.ctr("unpacking zip to temporary folder"))
-fp.unzip(f"{root}{packName}.zip", f"{root}temp")
+fp.unzip(f"{root}{packName}.zip", f"{root}temp_{packName}")
 
 # copy files into final folder
 print(cp.ctr("moving non-image files from temporary folder to final pack") + "\n")
-copy_tree(f"{root}temp", f"{root}XBR {packName}", update=1)
+copy_tree(f"{root}temp_{packName}", f"{root}XBR {packName}", update=1)
 
 # overwrite images in final folder with processed images from temp folder
 print(cp.ctr("Processing all images:"))
-images = [y for x in os.walk(f"{root}temp") for y in glob.glob(os.path.join(x[0], '*.png'))]
+images = [y for x in os.walk(f"{root}temp_{packName}") for y in glob.glob(os.path.join(x[0], '*.png'))]
 totalImages = len(images)
 
 for i in range(totalImages):
@@ -91,7 +91,7 @@ for i in range(totalImages):
 
     file_name = images[i][images[i].rfind("\\") + 1:]
     input_path = images[i][:images[i].rfind("\\") + 1]
-    output_path = input_path.replace("temp", f"XBR {packName}")
+    output_path = input_path.replace(f"temp_{packName}", f"XBR {packName}")
 
     process_image(input_path, output_path, file_name)
     cp.remove_lines(2)
@@ -99,7 +99,7 @@ cp.print_progress_bar(totalImages, totalImages, prefix="", suffix="Complete", le
 
 # clean up
 print("\n" + cp.ctr("removing temporary files"))
-rmtree(f"{root}temp")
+rmtree(f"{root}temp_{packName}")
 
 print("\n\n" + cp.ctr("Done!"))
 print(cp.ctr("press any key to exit"))

@@ -55,7 +55,7 @@ def process_image(input_path, output_path, image_name):
         cp.remove_lines(5)
 
     print(cp.ral("finalizing image        "))
-    trim_tile(output_path, image_name, 8)
+    trim_tile(input_path, image_name, 8)
 
     cp.remove_line()
 
@@ -152,11 +152,10 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-# Calls ScalerTest.exe with the proper args
+# Calls ImageResizer.exe with the proper args
 def xbr_4x(input_path, output_path, image_name):
-    arguments = f"-4xbrz \"{input_path}{image_name}\" \"{output_path}{image_name}\""
-    # arguments = f"/load \"{input_path}{image_name}\" /resize auto \"XBRz 4x\" /save \"{output_path}{image_name}\" "
+    arguments = f"/load \"{input_path}{image_name}\" /resize auto \"XBRz 4x(1, thresholds=1, hbounds=wrap, vbounds=wrap)\" /save \"{output_path}{image_name}\" "
     subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
-        resource_path("ScalerTest.exe ") +  # call in a way that works with files packed into an exe
+        resource_path("ImageResizer.exe ") +  # call in a way that works with files packed into an exe
         arguments,  # args for 4x vertically and horizontally wrapped, XBR
         creationflags=0x08000000)  # don't show the console window doing this.

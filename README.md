@@ -34,3 +34,17 @@ Prerequisites
 -------------
 * I have yet to figure these out, if it doesnt work for you:
   * Try to install python 3.0
+
+Building
+-------------
+Requirements:
+* Python3
+* msvcrt
+* shutil
+* distutils
+* glob
+* zipfile
+* subprocess
+* Pillow (PIL fork)
+
+Run `build.bat`

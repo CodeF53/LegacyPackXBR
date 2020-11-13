@@ -65,6 +65,11 @@ def tile_image(path, image_name, border_size):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
 
+    # Temporary Protection for if the image is super small,
+    #    Replace with Meta-Processing later on
+    if img_width == 1 | img_height == 1:
+        return
+
     # img[y,x]
     # vertical sandwich  bottom border_size lines -- image -- top border_size lines
     img = np.vstack([img[img_height - border_size:img_height, :], img, img[0:border_size, :]])
@@ -79,6 +84,11 @@ def tile_image(path, image_name, border_size):
 def trim_tile(path, image_name, num_pixels):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
+
+    # Temporary Protection for if the image is super small,
+    #    When meta-processing is added, this will be unnecessary
+    if img_width == 1 | img_height == 1:
+        return
 
     img = img[num_pixels:img_height - num_pixels, num_pixels:img_width - num_pixels]
 

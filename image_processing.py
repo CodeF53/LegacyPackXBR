@@ -16,7 +16,7 @@ def process_image(input_path, output_path, image_name):
     print(cp.ral(f"{image_name}"))
 
     print(cp.ral("tiling image        "))
-    tile_image(input_path, image_name, 2)
+    border_tile(input_path, image_name, 2)
 
     # make directory for shit to go in
     os.makedirs(output_path, exist_ok=True)
@@ -55,13 +55,108 @@ def process_image(input_path, output_path, image_name):
         cp.remove_lines(5)
 
     print(cp.ral("finalizing image        "))
-    trim_tile(output_path, image_name, 8)
+    trim_border(output_path, image_name, 8)
 
     cp.remove_line()
 
 
-# wraps image with border_size pixel border of itself (like a tiled plane of the image)
-def tile_image(path, image_name, border_size):
+#
+def process_image_new(input_path, output_path, image_name, border="empty", relayer=False, alpha_scale=False):
+    # would've used a switch here, but python doesnt have them
+    if border == "empty":
+        border_empty(input_path, image_name, 2)
+    elif border == "tile":
+        border_tile(input_path, image_name, 2)
+    elif border == "extend":
+        border_extend(input_path, image_name, 2)
+
+    # Upscales RGB and Alpha Channels indivdually, then merges them back together
+    if alpha_scale:
+        # split image into RGB and A
+        image_name_alpha = image_name[0:-4] + "_alpha.png"
+        image_name_rgb = image_name[0:-4] + "_rgb.png"
+        split_rgb_a(input_path, image_name, image_name_rgb, image_name_alpha)
+
+        # upscale RGB and A separately
+        xbr_4x(input_path, output_path, image_name_alpha)
+        xbr_4x(input_path, output_path, image_name_rgb)
+
+        # merge upscaled RGB and A back into RGBA
+        merge_rgb_a(output_path, image_name, image_name_rgb, image_name_alpha)
+
+        # remove temporary files
+        os.remove(f"{output_path}{image_name_alpha}")
+        os.remove(f"{output_path}{image_name_rgb}")
+    # Upscales Regularly, then culls transparency created during upscale
+    else:
+        # upscale image
+        xbr_4x(input_path, output_path, image_name)
+
+        # cull transparency created during upscale
+        cull_transparency(output_path, image_name)
+        cp.remove_lines(5)
+
+    # Layers Upscaled Result on top of original image
+    if relayer:
+        # do stuff
+        print("Tell CodeF53 to implement relayering")
+
+    #
+    trim_border(output_path, image_name, 8)
+
+
+# copies pixels from outermost edges outwards
+def border_extend(path, image_name, border_size):
+    img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
+
+    # Temporary Protection for if the image is super small,
+    #    Replace with Meta-Processing later on
+    img_width, img_height = [len(img[0, :]), len(img)]
+    if img_width == 1 | img_height == 1:
+        return
+
+    for i in range(border_size):
+        img_width, img_height = [len(img[0, :]), len(img)]
+        img = np.vstack([
+            img[0:1, :],
+            img,
+            img[img_height - 1:img_height, :]])
+
+        img = np.hstack([
+            img[:, 0:1],
+            img,
+            img[:, img_width - 1:img_width]])
+
+    Image.fromarray(img).save(f"{path}{image_name}")
+
+
+# wraps image with transparent pixel border
+def border_empty(path, image_name, border_size):
+    img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
+    img_width, img_height = [len(img[0, :]), len(img)]
+
+    # Temporary Protection for if the image is super small,
+    #    Replace with Meta-Processing later on
+    if img_width == 1 | img_height == 1:
+        return
+
+    # img[y,x]
+    img = np.vstack([
+        np.zeros((border_size, img_height, 4), dtype=np.uint8),
+        img,
+        np.zeros((border_size, img_height, 4), dtype=np.uint8)])
+
+    # horizontal sandwich  right border_size lines -- image -- left border_size lines
+    img = np.hstack([
+        np.zeros((img_width + 2 * border_size, border_size, 4), dtype=np.uint8),
+        img,
+        np.zeros((img_width + 2 * border_size, border_size, 4), dtype=np.uint8)])
+
+    Image.fromarray(img).save(f"{path}{image_name}")
+
+
+# wraps image with border as if it was a tile on a plane of itself
+def border_tile(path, image_name, border_size):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
 
@@ -81,7 +176,7 @@ def tile_image(path, image_name, border_size):
 
 
 # trims num_pixels from all edges of input image
-def trim_tile(path, image_name, num_pixels):
+def trim_border(path, image_name, num_pixels):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
 

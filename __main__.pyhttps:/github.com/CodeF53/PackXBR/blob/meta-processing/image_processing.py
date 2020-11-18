@@ -9,59 +9,25 @@ from PIL import Image
 import console_printing as cp
 
 
-# processes image:
-#   if it contains transparency, it scales alpha and RGB channels separately, upscales them, then merges them
-#   otherwise, it upscales the image, then culls the transparency introduced by scaling
-def process_image(input_path, output_path, image_name):
-    print(cp.ral(f"{image_name}"))
-
-    print(cp.ral("tiling image        "))
-    border_tile(input_path, image_name, 2)
-
-    # make directory for shit to go in
-    os.makedirs(output_path, exist_ok=True)
-
-    print(cp.ral("evaluating transparency        "))
-    if contains_transparency(input_path, image_name):
-        print(cp.ral("splitting image        "))
-        # create strings for future readability
-        image_name_alpha = image_name[0:-4] + "_alpha.png"
-        image_name_rgb = image_name[0:-4] + "_rgb.png"
-        # split image into alpha and rgb channels
-        split_rgb_a(input_path, image_name, image_name_rgb, image_name_alpha)
-
-        print(cp.ral("scaling channels        "))
-        # upscale split images
-        xbr_4x(input_path, output_path, image_name_alpha)
-        xbr_4x(input_path, output_path, image_name_rgb)
-
-        print(cp.ral("merging channels        "))
-        # merge upscaled image_name_alpha and image_name_color into image_name
-        merge_rgb_a(output_path, image_name, image_name_rgb, image_name_alpha)
-
-        print(cp.ral("removing temp files        "))
-        # Cleanup
-        os.remove(f"{output_path}{image_name_alpha}")
-        os.remove(f"{output_path}{image_name_rgb}")
-        cp.remove_lines(7)
-    else:
-        print(cp.ral("scaling image        "))
-        # upscale image
-        xbr_4x(input_path, output_path, image_name)
-
-        print(cp.ral("culling transparency        "))
-        # cull transparency from upscaled image
-        cull_transparency(output_path, image_name)
-        cp.remove_lines(5)
-
-    print(cp.ral("finalizing image        "))
-    trim_border(output_path, image_name, 8)
-
-    cp.remove_line()
-
-
+# processes image:  process_image(input_path, output_path, image_name, border="empty", relayer=Boolean, alpha_scale=Boolean):
+# Manages the processing of images pre and post upscale.
+#       input_path      Full Directory pointing where image is stored
+#       output_path     Full Directory pointing where processee image is to be saved
+#       image_name      Name of image, including file extension
 #
-def process_image_new(input_path, output_path, image_name, border="empty", relayer=False, alpha_scale=False):
+#       border      how the edges of the images should be treated during upscale
+#           "empty"     extends borders and fills them transparently
+#           "tile"      treats borders as if they were made of the original image tiled on a plane
+#           "extend"    copies pixels from edge into borders
+#       
+#       relayer     Layers a Nearest-Neighbor Upscale under the Result
+#           True/False
+#
+#   Perhaps alpha_scale would be better off as 2 seperate commands.
+#       alpha_scale
+#           True    Upscales RGB and Alpha Channels indivdually, then merges them back together
+#           False   Upscales Regularly, then culls transparency created during upscale
+def process_image(input_path, output_path, image_name, border="empty", relayer=False, alpha_scale=False):
     # would've used a switch here, but python doesnt have them
     if border == "empty":
         border_empty(input_path, image_name, 2)
@@ -96,12 +62,12 @@ def process_image_new(input_path, output_path, image_name, border="empty", relay
         cull_transparency(output_path, image_name)
         cp.remove_lines(5)
 
-    # Layers Upscaled Result on top of original image
+    # Layers a Nearest-Neighbor Upscale under the Result
     if relayer:
         # do stuff
         print("Tell CodeF53 to implement relayering")
 
-    #
+    # Crops into the outputted image 8 pixels on all sides, getting rid of border bullshit
     trim_border(output_path, image_name, 8)
 
 

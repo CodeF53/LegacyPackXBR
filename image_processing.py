@@ -12,7 +12,7 @@ import console_printing as cp
 # processes image:  process_image(input_path, output_path, image_name, border="empty", relayer=Boolean, alpha_scale=Boolean):
 # Manages the processing of images pre and post upscale.
 #       input_path      Full Directory pointing where image is stored
-#       output_path     Full Directory pointing where processee image is to be saved
+#       output_path     Full Directory pointing where processes image is to be saved
 #       image_name      Name of image, including file extension
 #
 #       border      how the edges of the images should be treated during upscale
@@ -23,11 +23,15 @@ import console_printing as cp
 #       relayer     Layers a Nearest-Neighbor Upscale under the Result
 #           True/False
 #
-#   Perhaps alpha_scale would be better off as 2 seperate commands.
+#
 #       alpha_scale
 #           True    Upscales RGB and Alpha Channels indivdually, then merges them back together
 #           False   Upscales Regularly, then culls transparency created during upscale
-def process_image(input_path, output_path, image_name, border="empty", relayer=False, alpha_scale=False):
+#
+#
+#       alias      Removes all pixels from resulting image with an 0<Opacity<255
+#           True/False
+def process_image(input_path, output_path, image_name, border="empty", relayer=False, alpha_scale=False, alias=True):
     # would've used a switch here, but python doesnt have them
     if border == "empty":
         border_empty(input_path, image_name, 2)
@@ -53,14 +57,10 @@ def process_image(input_path, output_path, image_name, border="empty", relayer=F
         # remove temporary files
         os.remove(f"{output_path}{image_name_alpha}")
         os.remove(f"{output_path}{image_name_rgb}")
-    # Upscales Regularly, then culls transparency created during upscale
+    # Upscales Regularly
     else:
-        # upscale image
+        # Upscale Regularly
         xbr_4x(input_path, output_path, image_name)
-
-        # cull transparency created during upscale
-        cull_transparency(output_path, image_name)
-        cp.remove_lines(5)
 
     # Layers a Nearest-Neighbor Upscale under the Result
     if relayer:
@@ -69,6 +69,10 @@ def process_image(input_path, output_path, image_name, border="empty", relayer=F
 
     # Crops into the outputted image 8 pixels on all sides, getting rid of border bullshit
     trim_border(output_path, image_name, 8)
+
+    # removes anti-aliasing made during upscale
+    if alias:
+        cull_transparency(output_path, image_name)
 
 
 # copies pixels from outermost edges outwards
@@ -183,19 +187,6 @@ def merge_rgb_a(path, image_name, image_name_rgb, image_name_alpha):
             img.putpixel((x, y), img.getpixel((x, y))[:3] + (alpha,))
 
     img.save(f"{path}{image_name}")
-
-
-# goes through each pixel of the input image, testing if 0 < a < 255, returning true if that is the case
-def contains_transparency(path, image_name):
-    img = Image.open(f"{path}{image_name}").convert("RGBA")
-
-    # for every pixel
-    for x in range(img.width):
-        for y in range(img.height):
-            if 0 < img.getpixel((x, y))[3] < 255:  # if alpha channel is between 0 and 255
-                return True
-
-    return False
 
 
 # goes through each pixel of the input image, testing if 0 < a < 255, setting it to 0 if that is the case

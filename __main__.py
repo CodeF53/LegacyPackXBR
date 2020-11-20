@@ -79,7 +79,7 @@ copy_tree(f"{root}temp_{packName}", f"{root}XBR {packName}", update=1)
 
 # overwrite images in final folder with processed images from temp folder
 print(cp.ctr("Processing all images:"))
-images = [y for x in os.walk(f"{root}temp_{packName}") for y in glob.glob(os.path.join(x[0], '*.png'))]
+images = [y for x in os.walk(f"{root}temp_{packName}\\assets\\") for y in glob.glob(os.path.join(x[0], '*.png'))]
 totalImages = len(images)
 
 for i in range(totalImages):
@@ -89,8 +89,13 @@ for i in range(totalImages):
     input_path = images[i][:images[i].rfind("\\") + 1]
     output_path = input_path.replace(f"temp_{packName}", f"XBR {packName}")
 
+    meta_root = images[i][:images[i].rfind("\\textures\\")+9]
+    relative_location = input_path[input_path.rfind("\\textures\\")+9:]
+
+    print(f"{meta_root}\n{relative_location}")
+
     process_image(input_path, output_path, file_name)
-    cp.remove_lines(2)
+    cp.remove_lines(0)
 cp.print_progress_bar(totalImages, totalImages, prefix="", suffix="Complete", length=25)
 
 # clean up

@@ -12,7 +12,7 @@ import console_printing as cp
 # processes image:
 #   if it contains transparency, it scales alpha and RGB channels separately, upscales them, then merges them
 #   otherwise, it upscales the image, then culls the transparency introduced by scaling
-def process_image(input_path, output_path, image_name):
+def process_image(input_path, output_path, image_name, scale_factor):
     print(cp.ral(f"{image_name}"))
 
     print(cp.ral("tiling image        "))
@@ -32,8 +32,8 @@ def process_image(input_path, output_path, image_name):
 
         print(cp.ral("scaling channels        "))
         # upscale split images
-        xbr_4x(input_path, output_path, image_name_alpha)
-        xbr_4x(input_path, output_path, image_name_rgb)
+        xbr(input_path, output_path, image_name_alpha, scale_factor)
+        xbr(input_path, output_path, image_name_rgb, scale_factor)
 
         print(cp.ral("merging channels        "))
         # merge upscaled image_name_alpha and image_name_color into image_name
@@ -47,7 +47,7 @@ def process_image(input_path, output_path, image_name):
     else:
         print(cp.ral("scaling image        "))
         # upscale image
-        xbr_4x(input_path, output_path, image_name)
+        xbr(input_path, output_path, image_name, scale_factor)
 
         print(cp.ral("culling transparency        "))
         # cull transparency from upscaled image
@@ -163,9 +163,9 @@ def resource_path(relative_path):
 
 
 # Calls xbrzscale.exe with the proper args
-def xbr_4x(input_path, output_path, image_name):
-    arguments = f"4 \"{input_path}{image_name}\" \"{output_path}{image_name}\""
+def xbr(input_path, output_path, image_name, scale_factor):
+    arguments = f"{scale_factor} \"{input_path}{image_name}\" \"{output_path}{image_name}\""
     subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
         resource_path("xbrzscale.exe ") +  # call in a way that works with files packed into an exe
-        arguments,  # args for 4x xBRz on our image
+        arguments,  # args for xBRz on our image
         creationflags=0x08000000)  # don't show the console window doing this.

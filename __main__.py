@@ -32,7 +32,22 @@ def user_input_zip(user_input):
         os.system('')
         return user_input_zip(
             input(cp.ctr("please enter the full path to a ResourcePack zip file") + "\n\n" + cp.text["GREEN"]))
+    cp.remove_lines(4)
+    print("")
     return root_tmp, name_tmp
+
+
+# asks for a Scale Factor until it gets a valid scale factor
+def user_input_scale_factor(user_input):
+    if user_input != "2" and user_input != "4" and user_input != "6":
+        cp.remove_lines(5)
+        os.system('')
+        print("\n" + cp.text["RED--"] + cp.ctr("invalid scale factor") + cp.text["NORM-"])
+        os.system('')
+        return user_input_scale_factor(input(cp.ctr("scale images by what factor? (2, 4, or 6)") + "\n\n" + cp.text["GREEN"]))
+    cp.remove_lines(4)
+    print("")
+    return user_input
 
 
 os.system('')
@@ -69,13 +84,18 @@ else:
     root, packName = user_input_zip(
         input(cp.ctr("please input the full path to a ResourcePack zip") + "\n\n" + cp.text["GREEN"]))
 
+# ask about what scale they want
+scale_factor = user_input_scale_factor(input(cp.text['NORM-'] + cp.ctr("scale images by what factor? (2, 4, or 6)") + "\n\n" + cp.text["GREEN"]))
+
 # unzip pack
-print("\n" + cp.text["NORM-"] + cp.ctr("unpacking zip to temporary folder"))
+print(cp.text["NORM-"] + cp.ctr("unpacking zip to temporary folder"))
 fp.unzip(f"{root}{packName}.zip", f"{root}temp_{packName}")
+cp.remove_line()
 
 # copy files into final folder
 print(cp.ctr("moving non-image files from temporary folder to final pack") + "\n")
 copy_tree(f"{root}temp_{packName}", f"{root}XBR {packName}", update=1)
+cp.remove_line()
 
 # overwrite images in final folder with processed images from temp folder
 print(cp.ctr("Processing all images:"))
@@ -89,7 +109,7 @@ for i in range(totalImages):
     input_path = images[i][:images[i].rfind("\\") + 1]
     output_path = input_path.replace(f"temp_{packName}", f"XBR {packName}")
 
-    process_image(input_path, output_path, file_name)
+    process_image(input_path, output_path, file_name, scale_factor)
     cp.remove_lines(2)
 cp.print_progress_bar(totalImages, totalImages, prefix="", suffix="Complete", length=25)
 

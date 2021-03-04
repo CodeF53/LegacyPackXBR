@@ -11,3 +11,4 @@ PackXBR.spec
 build/
 ScalerTest_Windows.exe
 *.exe
+*.dll

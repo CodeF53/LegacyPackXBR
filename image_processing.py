@@ -55,7 +55,7 @@ def process_image(input_path, output_path, image_name, scale_factor):
         cp.remove_lines(5)
 
     print(cp.ral("finalizing image        "))
-    trim_tile(output_path, image_name, 8)
+    trim_tile(output_path, image_name, int(scale_factor)*2)
 
     cp.remove_line()
 

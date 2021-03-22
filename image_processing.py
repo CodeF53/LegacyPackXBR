@@ -2,8 +2,11 @@
 import os
 import sys
 import subprocess
+import traceback
+
 import numpy as np
 from PIL import Image
+import msvcrt
 
 # Custom Shit
 import console_printing as cp
@@ -55,7 +58,7 @@ def process_image(input_path, output_path, image_name, scale_factor):
         cp.remove_lines(5)
 
     print(cp.ral("finalizing image        "))
-    trim_tile(output_path, image_name, int(scale_factor)*2)
+    trim_tile(output_path, image_name, int(scale_factor) * 2)
 
     cp.remove_line()
 
@@ -164,8 +167,12 @@ def resource_path(relative_path):
 
 # Calls xbrzscale.exe with the proper args
 def xbr(input_path, output_path, image_name, scale_factor):
-    arguments = f"{scale_factor} \"{input_path}{image_name}\" \"{output_path}{image_name}\""
-    subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
-        resource_path("xbrzscale.exe ") +  # call in a way that works with files packed into an exe
-        arguments,  # args for xBRz on our image
-        creationflags=0x08000000)  # don't show the console window doing this.
+    try:
+        arguments = f"{scale_factor} \"{input_path}{image_name}\" \"{output_path}{image_name}\""
+        subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
+            arguments,  # args for xBRz on our image
+            creationflags=0x08000000)  # don't show the console window doing this.
+    except Exception:
+        traceback.print_exc()
+        input(cp.ctr("press any key to exit"))
+        exit()

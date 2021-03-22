@@ -6,21 +6,22 @@ This project is for the automation of the creation of Resource Packs for minecra
 
 Usage:
 -------------
-Drop a ResourcePack zip onto `PackXBR.exe` or `__main__.py`
-OR
-Open `PackXBR.exe` or `__main__.py`, press enter, then enter the path to a ResourcePack zip
+Drop a ResourcePack zip onto PackXBR.exe
+
+OR Open PackXBR.exe, press enter, then enter the path to a ResourcePack zip
 
 Building
 -------------
 Requirements:
 * a compiled windows [xbrzscale](https://github.com/atheros/xbrzscale) binary
 * Python3
-* msvcrt
-* shutil
-* distutils
-* glob
-* zipfile
-* subprocess
+* Python3 libraries:
+  * shutil
+  * distutils
+  * glob
+  * zipfile
+  * subprocess
+* runtime `.dll`s for [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_image](https://www.libsdl.org/projects/SDL_image/)
 * Pillow (PIL fork)
 
 Run `build.bat`

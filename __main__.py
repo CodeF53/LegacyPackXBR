@@ -1,5 +1,4 @@
 # libraries
-import msvcrt
 import sys
 from shutil import rmtree
 from distutils.dir_util import copy_tree
@@ -95,7 +94,7 @@ cp.remove_line()
 # copy files into final folder
 print(cp.ctr("moving non-image files from temporary folder to final pack") + "\n")
 copy_tree(f"{root}temp_{packName}", f"{root}XBR {packName}", update=1)
-cp.remove_line()
+cp.remove_lines(2)
 
 # overwrite images in final folder with processed images from temp folder
 print(cp.ctr("Processing all images:"))
@@ -116,7 +115,7 @@ cp.print_progress_bar(totalImages, totalImages, prefix="", suffix="Complete", le
 # clean up
 print("\n" + cp.ctr("removing temporary files"))
 rmtree(f"{root}temp_{packName}")
+cp.remove_line()
 
 print("\n\n" + cp.ctr("Done!"))
-print(cp.ctr("press any key to exit"))
-msvcrt.getch()
+input(cp.ctr("press any key to exit"))

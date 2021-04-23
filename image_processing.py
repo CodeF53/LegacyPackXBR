@@ -6,7 +6,6 @@ import traceback
 
 import numpy as np
 from PIL import Image
-import msvcrt
 
 # Custom Shit
 import console_printing as cp
@@ -16,50 +15,42 @@ import console_printing as cp
 #   if it contains transparency, it scales alpha and RGB channels separately, upscales them, then merges them
 #   otherwise, it upscales the image, then culls the transparency introduced by scaling
 def process_image(input_path, output_path, image_name, scale_factor):
-    print(cp.ral(f"{image_name}"))
+    # I know this is fucking horrible, but I had to do it sometime.
+    if image_name == "pack.png":
+        return
 
-    print(cp.ral("tiling image        "))
+    print(cp.ral(f"Processing {image_name}"))
+
     tile_image(input_path, image_name, 2)
 
     # make directory for shit to go in
     os.makedirs(output_path, exist_ok=True)
 
-    print(cp.ral("evaluating transparency        "))
     if contains_transparency(input_path, image_name):
-        print(cp.ral("splitting image        "))
         # create strings for future readability
         image_name_alpha = image_name[0:-4] + "_alpha.png"
         image_name_rgb = image_name[0:-4] + "_rgb.png"
         # split image into alpha and rgb channels
         split_rgb_a(input_path, image_name, image_name_rgb, image_name_alpha)
 
-        print(cp.ral("scaling channels        "))
         # upscale split images
         xbr(input_path, output_path, image_name_alpha, scale_factor)
         xbr(input_path, output_path, image_name_rgb, scale_factor)
 
-        print(cp.ral("merging channels        "))
         # merge upscaled image_name_alpha and image_name_color into image_name
         merge_rgb_a(output_path, image_name, image_name_rgb, image_name_alpha)
 
-        print(cp.ral("removing temp files        "))
         # Cleanup
         os.remove(f"{output_path}{image_name_alpha}")
         os.remove(f"{output_path}{image_name_rgb}")
-        cp.remove_lines(7)
     else:
-        print(cp.ral("scaling image        "))
         # upscale image
         xbr(input_path, output_path, image_name, scale_factor)
 
-        print(cp.ral("culling transparency        "))
         # cull transparency from upscaled image
         cull_transparency(output_path, image_name)
-        cp.remove_lines(5)
 
-    print(cp.ral("finalizing image        "))
     trim_tile(output_path, image_name, int(scale_factor) * 2)
-
     cp.remove_line()
 
 
@@ -68,8 +59,7 @@ def tile_image(path, image_name, border_size):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
 
-    # Temporary Protection for if the image is super small,
-    #    Replace with Meta-Processing later on
+    # Protection for if the image is super small
     if img_width == 1 | img_height == 1:
         return
 
@@ -88,8 +78,7 @@ def trim_tile(path, image_name, num_pixels):
     img = np.asarray(Image.open(f"{path}{image_name}").convert('RGBA')).copy()
     img_width, img_height = [len(img[0, :]), len(img)]
 
-    # Temporary Protection for if the image is super small,
-    #    When meta-processing is added, this will be unnecessary
+    # Protection for if the image is super small
     if img_width == 1 | img_height == 1:
         return
 

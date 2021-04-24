@@ -51,7 +51,9 @@ def process_image(input_path, output_path, image_name, scale_factor):
         cull_transparency(output_path, image_name)
 
     trim_tile(output_path, image_name, int(scale_factor) * 2)
-    cp.remove_line()
+
+    print(cp.ral(f"Finished {image_name}"))
+    #cp.remove_line()
 
 
 # wraps image with border_size pixel border of itself (like a tiled plane of the image)

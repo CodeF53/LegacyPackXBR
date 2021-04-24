@@ -4,7 +4,7 @@ pyinstaller --onefile --console ^
       --add-binary "SDL2_image.dll;." --add-binary "SDL2.dll;." ^
       --add-binary "libpng16-16.dll;." --add-binary "zlib1.dll;." ^
       --add-binary "libwinpthread-1.dll;." ^
-    "__main__.py"
+    "main.py"
 
 del  *.pyo PackXBR.spec
 rmdir /Q /s __pycache__

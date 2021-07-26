@@ -95,7 +95,7 @@ def main():
     images = [y for x in os.walk(f"{root}temp_{packName}") for y in glob.glob(os.path.join(x[0], '*.png'))]
     totalImages = len(images)
 
-    with ProcessPoolExecutor() as executor:
+    with ProcessPoolExecutor(max_workers=int(round((os.cpu_count()/4)*3, 0))) as executor:
         for i in range(totalImages):
             # cp.print_progress_bar(i, totalImages, prefix="", suffix="Complete", length=25)
 

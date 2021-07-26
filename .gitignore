@@ -12,3 +12,4 @@ build/
 ScalerTest_Windows.exe
 *.exe
 *.dll
+temp.py

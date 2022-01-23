@@ -14,6 +14,8 @@ Building
 -------------
 Requirements:
 * a compiled windows [xbrzscale](https://github.com/atheros/xbrzscale) binary
+* runtime `.dll`s for [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_image](https://www.libsdl.org/projects/SDL_image/)
+  * easiest way to get xbrzscale.exe and runtime ` .dlls` is through the [releases page of my fork](https://github.com/CodeF53/xbrzscale/releases)
 * Python3
 * Python3 libraries:
   * shutil
@@ -21,7 +23,6 @@ Requirements:
   * glob
   * zipfile
   * subprocess
-* runtime `.dll`s for [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_image](https://www.libsdl.org/projects/SDL_image/)
 * Pillow (PIL fork)
 
 Run `build.bat`

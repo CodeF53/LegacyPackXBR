@@ -10,6 +10,10 @@ Drop a ResourcePack zip onto PackXBR.exe
 
 OR Open PackXBR.exe, press enter, then enter the path to a ResourcePack zip
 
+Tutorial video:
+
+https://user-images.githubusercontent.com/37855219/165995159-6b8c2c81-4f74-4c7b-be39-377ad06bcea6.mp4
+
 Building
 -------------
 Requirements:

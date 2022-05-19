@@ -52,6 +52,22 @@ def user_input_scale_factor(user_input):
     print("")
     return user_input
 
+def user_input_algorithm(user_input):
+    if user_input != "xBR" and user_input != "xBRZ":
+        cp.remove_lines(10)
+        os.system('')
+        print("\n" + cp.text["RED--"] + cp.ctr("invalid algorithm") + cp.text["NORM-"])
+        os.system('')
+
+        print(cp.text['NORM-'] + cp.ctr("What scaling algorithm do you want to use? (xBR or xBRZ)"))
+        print("\nxBR  - Used for organic visuals, like the patterns on grass or leaves."
+              "\n\tSmooths things out a lot more, blending a lot of color and geometry.")
+        print("xBRZ - Used for sharper visuals, like the sharper edges of a brick texture."
+              "\n\tBlends less colors together, staying closer to the source texture.")
+        return user_input_algorithm(input("\n" + cp.text["GREEN"]))
+    cp.remove_lines(9)
+    print("")
+    return user_input
 
 def main():
     os.system('')
@@ -89,7 +105,21 @@ def main():
             input(cp.ctr("please input the full path to a ResourcePack zip") + "\n\n" + cp.text["GREEN"]))
 
     # ask about what scale they want
-    scale_factor = user_input_scale_factor(input(cp.text['NORM-'] + cp.ctr("scale images by what factor? (2, 4, or 6)") + "\n\n" + cp.text["GREEN"]))
+    scale_factor = user_input_scale_factor(
+        input(cp.text['NORM-'] + cp.ctr("scale images by what factor? (2, 4, or 6 (xBRZ only))") + "\n\n" + cp.text["GREEN"]))
+
+    # ask what algorithm to use
+    if scale_factor == "6":
+        print(cp.text['RED--'] + cp.ctr("scale factor is set to 6, which is only supported by xBRZ") +
+              cp.text['NORM-'] + cp.ctr("Defaulting to xBRZ algorithm...") + "\n")
+        algorithm = "xBRZ"
+    else:
+        print(cp.text['NORM-'] + cp.ctr("What scaling algorithm do you want to use? (xBR or xBRZ)"))
+        print("\nxBR  - Used for organic visuals, like the patterns on grass or leaves."
+              "\n\tSmooths things out a lot more, blending a lot of color and geometry.\n\n"
+              "xBRZ - Used for sharper visuals, like the sharper edges of a brick texture."
+              "\n\tBlends less colors together, staying closer to the source texture.")
+        algorithm = user_input_algorithm(input("\n" + cp.text["GREEN"]))
 
     # unzip pack
     print(cp.text["NORM-"] + cp.ctr("unpacking zip to temporary folder"))
@@ -108,16 +138,11 @@ def main():
 
     with ProcessPoolExecutor(max_workers=int(round((os.cpu_count()/4)*3, 0))) as executor:
         for i in range(totalImages):
-            # cp.print_progress_bar(i, totalImages, prefix="", suffix="Complete", length=25)
-
             file_name = images[i][images[i].rfind("\\") + 1:]
             input_path = images[i][:images[i].rfind("\\") + 1]
             output_path = input_path.replace(f"temp_{packName}", f"XBR {packName}")
 
-            executor.submit(process_image, input_path=input_path, output_path=output_path, image_name=file_name, scale_factor=scale_factor)
-
-            # cp.remove_lines(2)
-    # cp.print_progress_bar(totalImages, totalImages, prefix="", suffix="Complete", length=25)
+            executor.submit(process_image, input_path=input_path, output_path=output_path, image_name=file_name, scale_factor=scale_factor, algorithm = algorithm)
 
     # clean up
     print("\n" + cp.ctr("removing temporary files"))

@@ -14,7 +14,7 @@ import console_printing as cp
 # processes image:
 #   if it contains transparency, it scales alpha and RGB channels separately, upscales them, then merges them
 #   otherwise, it upscales the image, then culls the transparency introduced by scaling
-def process_image(input_path, output_path, image_name, scale_factor):
+def process_image(input_path, output_path, image_name, scale_factor, algorithm):
     # I know this is fucking horrible, but I had to do it sometime.
     if image_name == "pack.png":
         return
@@ -34,8 +34,8 @@ def process_image(input_path, output_path, image_name, scale_factor):
         split_rgb_a(input_path, image_name, image_name_rgb, image_name_alpha)
 
         # upscale split images
-        xbr(input_path, output_path, image_name_alpha, scale_factor)
-        xbr(input_path, output_path, image_name_rgb, scale_factor)
+        xbr(input_path, output_path, image_name_alpha, scale_factor, algorithm)
+        xbr(input_path, output_path, image_name_rgb, scale_factor, algorithm)
 
         # merge upscaled image_name_alpha and image_name_color into image_name
         merge_rgb_a(output_path, image_name, image_name_rgb, image_name_alpha)
@@ -45,7 +45,7 @@ def process_image(input_path, output_path, image_name, scale_factor):
         os.remove(f"{output_path}{image_name_rgb}")
     else:
         # upscale image
-        xbr(input_path, output_path, image_name, scale_factor)
+        xbr(input_path, output_path, image_name, scale_factor, algorithm)
 
         # cull transparency from upscaled image
         cull_transparency(output_path, image_name)
@@ -158,9 +158,9 @@ def resource_path(relative_path):
 
 # TODO: linux
 # Calls ScalerTest_Windows.exe with the proper args
-def xbr(input_path, output_path, image_name, scale_factor):
+def xbr(input_path, output_path, image_name, scale_factor, algorithm):
     try:
-        arguments = f"-{scale_factor}xBRZ \"{input_path}{image_name}\" \"{output_path}{image_name}\""
+        arguments = f"-{scale_factor}{algorithm} \"{input_path}{image_name}\" \"{output_path}{image_name}\""
         subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
             resource_path("ScalerTest_Windows.exe ") +  # call in a way that works with files packed into an exe
             arguments,  # args for xBRz on our image

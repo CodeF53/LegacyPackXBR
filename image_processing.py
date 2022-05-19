@@ -151,7 +151,7 @@ def resource_path(relative_path):
         # noinspection PyUnresolvedReferences
         base_path = sys._MEIPASS
     except Exception:
-        # If the above fails, it means we arent compiled, so paths work normally
+        # If the above fails, it means we aren't compiled, so paths work normally
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 

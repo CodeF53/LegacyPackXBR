@@ -6,9 +6,11 @@ This project is for the automation of the creation of Resource Packs for minecra
 
 Usage:
 -------------
-Drop a ResourcePack zip onto PackXBR.exe
+Download https://sourceforge.net/projects/xbrz/ and put `ScalerTest_Windows.exe` into the same directory as `PackXBR.exe`
 
-OR Open PackXBR.exe, press enter, then enter the path to a ResourcePack zip
+Drop a ResourcePack zip onto `PackXBR.exe`
+
+OR Open `PackXBR.exe`, press enter, then enter the path to a ResourcePack zip
 
 Tutorial video:
 
@@ -17,16 +19,13 @@ https://user-images.githubusercontent.com/37855219/165995159-6b8c2c81-4f74-4c7b-
 Building
 -------------
 Requirements:
-* a compiled windows [xbrzscale](https://github.com/atheros/xbrzscale) binary
-* runtime `.dll`s for [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL_image](https://www.libsdl.org/projects/SDL_image/)
-  * easiest way to get xbrzscale.exe and runtime ` .dlls` is through the [releases page of my fork](https://github.com/CodeF53/xbrzscale/releases)
 * Python3
 * Python3 libraries:
   * shutil
-  * distutils
   * glob
   * zipfile
   * subprocess
+  * webbrowser
 * Pillow (PIL fork)
 
 Run `build.bat`
@@ -34,6 +33,7 @@ Run `build.bat`
 To-Do:
 -------------
 General:
+* Linux Support
 * Create online utility
   * May require a python port of xBRz
 
@@ -55,8 +55,7 @@ Credits:
 -------------
 * [Zenju's xBRz](https://sourceforge.net/projects/xbrz/)
   * A nice xBR modification
-* [xBRzScale](https://github.com/atheros/xbrzscale)
-  * A barebones implementation of xBRz
+  * A nice tool for comparing many scaling algorithms.
 * Misterk7_-
-  * Creator of VanillaXBR, a the pack that inspired this.
+  * Creator of VanillaXBR, the pack that inspired this.
     * if you are interested enough to read to here, [you should join the discord](https://discord.gg/jruhHac)

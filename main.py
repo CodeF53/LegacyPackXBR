@@ -1,11 +1,13 @@
 # libraries
 import sys
 from shutil import rmtree
-from distutils.dir_util import copy_tree
+from shutil import copytree
 import os
 import glob
 from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import freeze_support
+from os.path import exists
+from webbrowser import open as openurl
 
 # custom shit
 from image_processing import process_image
@@ -16,8 +18,8 @@ import console_printing as cp
 # asks for a ResourcePack zip until it gets a valid zip file
 # returns root, (zip_)name
 def user_input_zip(user_input):
-    exists, root_tmp, name_tmp, extension = fp.file_meta(user_input)
-    if not exists:
+    zip_exists, root_tmp, name_tmp, extension = fp.file_meta(user_input)
+    if not zip_exists:
         cp.remove_lines(5)
         os.system('')
         print("\n" + cp.text["RED--"] + cp.ctr("the file you entered either doesn't exist, or has an invalid path") +
@@ -61,6 +63,15 @@ def main():
     print(cp.ctrs("|_|   \\__,_|\\___|_|\\_\\/_/ \\_\\____/|_|  \\_\\", f"{cp.text['CYAN-']}|_|   \\__,_|\\___|_|\\_\\{cp.text['BLUE-']}/_/ \\_\\____/|_|  \\_\\{cp.text['NORM-']}"))
     print("\n")
 
+    # Check if there is a valid ScalarTest binary in the same directory as PackXBR
+    # TODO: figure out how linux works with binaries, do we need to add executable args with chmod ourselves?
+    if not (exists("ScalerTest_Windows.exe")):  # or exists("ScalerTest_Linux")):
+        # complain and point user in right direction
+        openurl("https://sourceforge.net/projects/xbrz/files/latest/download")
+        print(cp.text["RED--"] + cp.ctr("PackXBR requires ScalarTest in the same directory as itself"))
+        input(cp.text['NORM-'] + cp.ctr("press any key to exit"))
+        exit()
+
     # Get pack information
     root = None
     packName = None
@@ -87,7 +98,7 @@ def main():
 
     # copy files into final folder
     print(cp.ctr("moving non-image files from temporary folder to final pack") + "\n")
-    copy_tree(f"{root}temp_{packName}", f"{root}XBR {packName}", update=1)
+    copytree(f"{root}temp_{packName}", f"{root}XBR {packName}")
     cp.remove_lines(2)
 
     # overwrite images in final folder with processed images from temp folder

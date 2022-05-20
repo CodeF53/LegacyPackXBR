@@ -14,7 +14,6 @@ from image_processing import process_image
 import file_processing as fp
 import console_printing as cp
 
-
 # asks for a ResourcePack zip until it gets a valid zip file
 # returns root, (zip_)name
 def user_input_zip(user_input):

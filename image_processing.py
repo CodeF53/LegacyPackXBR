@@ -162,7 +162,7 @@ def xbr(input_path, output_path, image_name, scale_factor, algorithm):
     try:
         arguments = f"-{scale_factor}{algorithm} \"{input_path}{image_name}\" \"{output_path}{image_name}\""
         subprocess.check_output(  # launch a process with args, pausing main thread until process is finished
-            resource_path("ScalerTest_Windows.exe ") +  # call in a way that works with files packed into an exe
+            "ScalerTest_Windows.exe " +  # resource_path("ScalerTest_Windows.exe") +  # call in a way that works with files packed into an exe
             arguments,  # args for xBRz on our image
             creationflags=0x08000000)  # don't show the console window doing this.
     except Exception:

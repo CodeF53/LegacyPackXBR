@@ -28,12 +28,14 @@ class HoverButton(tk.Button):
         self['background'] = self.defaultBackground
 
 
+# mishmash of a lot of code
+# https://stackoverflow.com/a/23836427/8133370
+# - general solution
+# https://stackoverflow.com/a/48738216/8133370
+# - good movement feel
+# https://github.com/Terranova-Python/Tkinter-Menu-Bar
+# - taskbar fix
 def darkTitle(root):
-    def minim():
-        root.overrideredirect(False)
-        root.wm_state("iconic")
-        root.overrideredirect(True)
-
     # turns off default windows titlebar
     root.overrideredirect(True)
     # make a frame for the new title bar
@@ -45,8 +47,7 @@ def darkTitle(root):
 
     # title
     tk.Label(title_bar, text=" PackXBR", bg="#262626", borderwidth=0, highlightthickness=0,
-             fg="#B8BABD", font=("Arial", 10)). \
-        pack(side=tk.LEFT)
+             fg="#B8BABD", font=("Arial", 10)).pack(side=tk.LEFT)
     # close button
     HoverButton(title_bar, text=' ✕ ', command=root.destroy,
                 bg="#262626", highlightbackground="#E81123", activebackground="#E81123",
@@ -54,7 +55,7 @@ def darkTitle(root):
                 takefocus=False, font=("Arial", 10)). \
         pack(side=tk.RIGHT)
     # minimize button
-    HoverButton(title_bar, text=' – ', command=minim,
+    HoverButton(title_bar, text=' – ', command=lambda: root.attributes("-alpha", 0),
                 bg="#262626", highlightbackground="#2E3033", activebackground="#2E3033",
                 borderwidth=0, highlightthickness=0, fg="#B8BABD", activeforeground="#B8BABD",
                 takefocus=False, font=("Arial", 10)). \
@@ -66,7 +67,6 @@ def darkTitle(root):
         ywin = root.winfo_y()
         startx = event.x_root
         starty = event.y_root
-
         ywin = ywin - starty
         xwin = xwin - startx
 
@@ -76,5 +76,13 @@ def darkTitle(root):
         title_bar.bind('<B1-Motion>', move_window)
 
     title_bar.bind('<Button-1>', get_pos)
+
+    def set_appwindow(mainWindow):  # to display the window icon on the taskbar,
+        mainWindow.wm_withdraw()
+        mainWindow.after(10, lambda: mainWindow.wm_deiconify())
+
+    root.bind("<FocusIn>", lambda event: (
+    root.focus(), root.attributes("-alpha", 1)))  # to view the window by clicking on the window icon on the taskbar
+    root.after(10, lambda: set_appwindow(root))
 
     return window

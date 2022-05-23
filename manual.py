@@ -86,8 +86,9 @@ class ManualGUI(tk.Frame):
         nextButton.grid(column=2, row=6, columnspan=2, sticky=W + E, padx=30, pady=10)
 
         # Back button
-        backButton = ttk.Button(self, text='back', command=self.previous_image)
-        backButton.grid(column=3, row=0, columnspan=2, sticky=W + E, padx=30, pady=10)
+        self.backButton = ttk.Button(self, text='back', command=self.previous_image)
+        self.backButton.grid(column=3, row=0, columnspan=2, sticky=W + E, padx=30, pady=10)
+        self.backButton["state"] = "disabled"
 
 
     def get_args(self):
@@ -115,6 +116,11 @@ class ManualGUI(tk.Frame):
 
     # called by logic.updatePreview()
     def update_preview(self, raw_image_path, scaled_image_path):
+        if logic.imageIndex > 0:
+            self.backButton["state"] = "normal"
+        else:
+            self.backButton["state"] = "disabled"
+
         # TODO: fix shit
         # https://stackoverflow.com/questions/273946/how-do-i-resize-an-image-using-pil-and-maintain-its-aspect-ratio
         raw_image = ImageTk.PhotoImage(image=Image.open(raw_image_path).resize((256, 256), Image.NEAREST))

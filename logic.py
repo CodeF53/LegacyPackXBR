@@ -50,10 +50,10 @@ def init_logic(args, ManualGUI):
 # iterates imageIndex
 def next_image():
     global img_raw, img_scaled
+    #  -- This is now done when the pack is done --
     # put scaled image into place of raw image
-    remove(img_raw)
-    rename(img_scaled, img_raw)
-
+    # remove(img_raw)
+    # rename(img_scaled, img_raw)
     initialize_next_image()
 
 # deletes scaled image and uses raw image
@@ -80,6 +80,14 @@ def initialize_next_image():
         update_preview()
     except IndexError:
         # done upscaling!
+        for img_raw_local in imageLocations:
+            img_scaled_local = img_raw_local.replace(".png", "_scaled.png")
+            if isfile(img_scaled_local):
+                # user did not skip this image,
+                remove(img_raw_local)
+                rename(img_scaled_local, img_raw_local)
+
+        # go to end screen
         screen.nextScreen({"pack_location": pack_location}, "manual")
 
 # ran every time an option is changed in manualPage

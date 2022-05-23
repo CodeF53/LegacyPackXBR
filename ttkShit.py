@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 from tkinter import N, E, S, W
 
 
-def multipleChoice(root, options, values, variable, grid):
+def multiple_choice(root, options, values, variable, grid):
     if not len(options) == len(values) == len(grid):
         raise Exception("multipleChoice options and values must be the same length")
 
@@ -35,7 +35,7 @@ class HoverButton(tk.Button):
 # - good movement feel
 # https://github.com/Terranova-Python/Tkinter-Menu-Bar
 # - taskbar fix
-def darkTitle(root):
+def dark_title(root):
     # turns off default windows titlebar
     root.overrideredirect(True)
     # make a frame for the new title bar
@@ -77,12 +77,12 @@ def darkTitle(root):
 
     title_bar.bind('<Button-1>', get_pos)
 
-    def set_appwindow(mainWindow):  # to display the window icon on the taskbar,
-        mainWindow.wm_withdraw()
-        mainWindow.after(10, lambda: mainWindow.wm_deiconify())
+    def set_appwindow(main_window):  # to display the window icon on the taskbar,
+        main_window.wm_withdraw()
+        main_window.after(10, lambda: main_window.wm_deiconify())
 
     root.bind("<FocusIn>", lambda event: (
-    root.focus(), root.attributes("-alpha", 1)))  # to view the window by clicking on the window icon on the taskbar
+        root.focus(), root.attributes("-alpha", 1)))  # to view the window by clicking on the window icon on the taskbar
     root.after(10, lambda: set_appwindow(root))
 
     return window

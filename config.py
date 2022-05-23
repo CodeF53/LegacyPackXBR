@@ -4,7 +4,7 @@ import tkinter.ttk as ttk
 from tkinter import N, E, S, W
 from os.path import exists, isdir
 # internal methods
-from ttkShit import multipleChoice
+from ttkShit import multiple_choice
 
 
 def configPage(window, externalNextScreen):
@@ -42,18 +42,15 @@ def configPage(window, externalNextScreen):
     # - sets packLocation_valid
     # - sets packLocation_warning's text
     #   - if its invalid, display warning, if its valid be empty
-    def verifyPackLocation(ignored=None):
-        global packLocation_valid
+    def verifyPackLocation(event=None):
         packPath = packLocation.get()
 
         if exists(packPath):
             if isdir(packPath) or packPath[-4:] == ".zip":
                 nextButton["state"] = "normal"
-                packLocation_valid = True
                 packLocation_warning.config(text="")
                 return
         nextButton["state"] = "disabled"
-        packLocation_valid = False
         packLocation_warning.config(text=packLocation_warning_text_active)
 
     # Drag and drop pack input
@@ -73,7 +70,6 @@ def configPage(window, externalNextScreen):
     # Check if location valid after each keyrelease
     packLocationBox.bind('<KeyRelease>', verifyPackLocation)
     # Label
-    packLocation_valid = False
     packLocation_warning_text_active = "Resource Pack be a zip or folder"
     packLocation_warning = ttk.Label(window, text="")
     packLocation_warning.config(font=("Default", 8), foreground="red")
@@ -85,9 +81,9 @@ def configPage(window, externalNextScreen):
     # Var and default value
     scaleFactor = tk.IntVar(value=4)
     # Create
-    multipleChoice(root=window, variable=scaleFactor, options=("2x", "4x", "6x"), values=(2, 4, 6),
-                   grid=((0, 4), (0, 5), (0, 6))
-                   )
+    multiple_choice(root=window, variable=scaleFactor, options=("2x", "4x", "6x"), values=(2, 4, 6),
+                    grid=((0, 4), (0, 5), (0, 6))
+                    )
 
     # Multiple choice for mode
     # Label
@@ -95,9 +91,9 @@ def configPage(window, externalNextScreen):
     # Var and default value
     auto = tk.BooleanVar(value=False)
     # Create
-    multipleChoice(root=window, variable=auto, options=("Manual", "Auto"), values=(False, True),
-                   grid=((1, 4), (1, 5))
-                   )
+    multiple_choice(root=window, variable=auto, options=("Manual", "Auto"), values=(False, True),
+                    grid=((1, 4), (1, 5))
+                    )
 
     # Next screen button
     nextButton = ttk.Button(window, text='next', command=nextScreen)

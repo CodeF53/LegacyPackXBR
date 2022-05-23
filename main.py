@@ -3,10 +3,11 @@ import tkinter as tk
 from ttkthemes import ThemedStyle
 
 # internal methods
-from ttkShit import darkTitle
+from exit import exit_screen
+from ttkShit import dark_title
 from config import configPage
 from manual import ManualGUI
-from logic import initLogic
+from logic import init_logic
 
 def nextScreen(args, screen):
     if screen == "config":
@@ -14,12 +15,18 @@ def nextScreen(args, screen):
         configScreen.destroy()
 
         # Initialize internal upscaler
-        initLogic(args, manualScreen)
+        init_logic(args, manualScreen)
 
         if args.get("auto"):
             raise Exception("auto is not yet implemented for PackXBR GUI")
         else:
             manualScreen.pack(expand=1, fill=tk.BOTH)
+    if screen == "manual":
+        # Stop rendering
+        manualScreen.destroy()
+
+        # Show exit screen
+        exit_screen(tk.Canvas(window, bg="#464646", borderwidth=0, highlightthickness=0), args).pack(expand=1, fill=tk.BOTH)
 
 
 # Establish window parameters
@@ -30,12 +37,11 @@ root.resizable(False, False)
 root.config(bg="#464646")
 ThemedStyle(root).set_theme("equilux")
 # Dark title bar
-window = darkTitle(root)
+window = dark_title(root)
 
 configScreen = configPage(tk.Canvas(window, bg="#464646", borderwidth=0, highlightthickness=0), nextScreen)
 configScreen.pack(expand=1, fill=tk.BOTH)
 manualScreen = ManualGUI(window, nextScreen)
-#manualScreen.pack(expand=1, fill=tk.BOTH)
 
 if __name__ == '__main__':
     root.mainloop()

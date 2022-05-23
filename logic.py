@@ -6,10 +6,10 @@ from glob import glob
 
 from image_processing import process_image
 
-packLocation = ""
+pack_location = ""
 scale_factor = 4
 imageLocations = []
-imageIndex = 0
+imageIndex = -1
 
 img_raw = ""
 img_scaled = ""
@@ -21,67 +21,71 @@ screen = None
 # - caches scale factor, pack location from args
 # - unzips/clones to output directory -> "{packLocation}_xbr"
 # - generates imageLocations
-def initLogic(args, ManualGUI):
+def init_logic(args, ManualGUI):
     global screen
     screen = ManualGUI
     # cache scale factor, pack location
-    global packLocation, scale_factor, imageLocations
-    packLocation = args.get("packLocation")
+    global pack_location, scale_factor, imageLocations
+    pack_location = args.get("packLocation")
     scale_factor = args.get("scaleFactor")
 
     # unzip/clone to output directory -> "{packLocation}_xbr"
-    if isfile(packLocation):
+    if isfile(pack_location):
         # unzip to output directory
-        ZipFile(packLocation, 'r').extractall(args.get("packLocation")[0:-4] + "_xbr")
-        packLocation = packLocation[0:-4] + "_xbr"
+        ZipFile(pack_location, 'r').extractall(args.get("packLocation")[0:-4] + "_xbr")
+        pack_location = pack_location[0:-4] + "_xbr"
     else:
         # clone to output directory
-        copytree(src=packLocation, dst=packLocation + "_xbr")
-        packLocation = packLocation + "_xbr"
+        copytree(src=pack_location, dst=pack_location + "_xbr")
+        pack_location = pack_location + "_xbr"
 
     # generate list of locations to images
-    # todo: make list go in a logical order, one folder then the next.
-    imageLocations = [y for x in walk(packLocation) for y in glob(join(x[0], '*.png'))]
+    # todo: ignore files with _xbr.png
+    imageLocations = [y for x in walk(pack_location) for y in glob(join(x[0], '*.png'))]
 
-    # sdrnigthfuor
-    initializeNextImage()
+    # prepare manual render previews
+    initialize_next_image()
 
 # deletes raw image and uses scaled image
 # iterates imageIndex
-def nextImage():
+def next_image():
     global imageIndex, img_raw, img_scaled
     # put scaled image into place of raw image
+    remove(img_raw)
     rename(img_scaled, img_raw)
 
-    imageIndex = imageIndex + 1
-    initializeNextImage()
+    initialize_next_image()
 
 # deletes scaled image and uses raw image
 # iterates imageIndex
-def skipImage():
+def skip_image():
     global imageIndex, img_scaled
     # delete scaled image
     remove(img_scaled)
 
-    imageIndex = imageIndex + 1
-    initializeNextImage()
+    initialize_next_image()
 
 # updates internal image variables
 # ran by nextImage() and skipImage()
-def initializeNextImage():
+def initialize_next_image():
     global imageLocations, imageIndex
     global img_raw, img_scaled
-    img_raw = imageLocations[imageIndex]
+    imageIndex = imageIndex + 1
 
-    img_scaled = img_raw.replace(".png", "_scaled.png")
-    copy(img_raw, img_scaled)
+    try:
+        img_raw = imageLocations[imageIndex]
+        img_scaled = img_raw.replace(".png", "_scaled.png")
+        copy(img_raw, img_scaled)
 
-    update_preview()
+        update_preview()
+    except IndexError:
+        # done upscaling!
+        screen.nextScreen({"pack_location": pack_location}, "manual")
 
 # ran every time an option is changed in manualPage
 def update_preview():
     global img_raw, img_scaled
-    process_image(screen.getArgs(), img_raw, img_scaled, scale_factor)
+    process_image(screen.get_args(), img_raw, img_scaled, scale_factor)
 
     screen.update_preview(img_raw, img_scaled)
 

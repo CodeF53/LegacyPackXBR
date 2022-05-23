@@ -40,7 +40,7 @@ class ManualGUI(tk.Frame):
         ttk.Label(self, text="Algorithm:").grid(column=0, row=5, sticky=W + E, padx=30, pady=(10, 0))  # Label
         algorithm_dropdown = ttk.Combobox(self, textvariable=self.algorithm, width=5)  # Init
         algorithm_dropdown['values'] = ("xBR", "xBRZ")  # Options
-        algorithm_dropdown.current(0)
+        algorithm_dropdown.current(1)
         algorithm_dropdown.bind("<<ComboboxSelected>>", self.on_arguments_change)
         algorithm_dropdown.grid(column=0, row=6, padx=30, pady=(0, 10))  # Location
 
@@ -85,6 +85,11 @@ class ManualGUI(tk.Frame):
         nextButton = ttk.Button(self, text='next', command=self.next_image)
         nextButton.grid(column=2, row=6, columnspan=2, sticky=W + E, padx=30, pady=10)
 
+        # Back button
+        backButton = ttk.Button(self, text='back', command=self.previous_image)
+        backButton.grid(column=3, row=0, columnspan=2, sticky=W + E, padx=30, pady=10)
+
+
     def get_args(self):
         return {
             "nTile": self.north_tile.get(),
@@ -110,6 +115,8 @@ class ManualGUI(tk.Frame):
 
     # called by logic.updatePreview()
     def update_preview(self, raw_image_path, scaled_image_path):
+        # TODO: fix shit
+        # https://stackoverflow.com/questions/273946/how-do-i-resize-an-image-using-pil-and-maintain-its-aspect-ratio
         raw_image = ImageTk.PhotoImage(image=Image.open(raw_image_path).resize((256, 256), Image.NEAREST))
         self.raw_image_label.config(image=raw_image)
         self.raw_image_label.image = raw_image
@@ -134,6 +141,10 @@ class ManualGUI(tk.Frame):
     @staticmethod
     def skip_image():
         logic.skip_image()
+
+    @staticmethod
+    def previous_image():
+        logic.previous_image()
 
 
 # the keys of image_processing.tile_dict in order

@@ -49,7 +49,7 @@ def init_logic(args, ManualGUI):
 # deletes raw image and uses scaled image
 # iterates imageIndex
 def next_image():
-    global imageIndex, img_raw, img_scaled
+    global img_raw, img_scaled
     # put scaled image into place of raw image
     remove(img_raw)
     rename(img_scaled, img_raw)
@@ -59,7 +59,7 @@ def next_image():
 # deletes scaled image and uses raw image
 # iterates imageIndex
 def skip_image():
-    global imageIndex, img_scaled
+    global img_scaled
     # delete scaled image
     remove(img_scaled)
 
@@ -89,3 +89,8 @@ def update_preview():
 
     screen.update_preview(img_raw, img_scaled)
 
+
+def previous_image():
+    global imageIndex
+    imageIndex = imageIndex - 2
+    initialize_next_image()

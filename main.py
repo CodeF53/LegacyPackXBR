@@ -1,7 +1,6 @@
 from tkinterdnd2 import TkinterDnD
 import tkinter as tk
 from ttkthemes import ThemedStyle
-from pyautogui import size as screen_size
 
 # internal methods
 from exit import exit_screen
@@ -36,7 +35,7 @@ root = TkinterDnD.Tk()
 root.title("PackXBR")
 root.resizable(False, False)
 # set it in the center of the screen
-root.geometry(f"+{int(screen_size()[0]/2) - 131}+{int(screen_size()[1]/2) - 132}")
+root.geometry(f"+{int(root.winfo_screenwidth()/2) - 131}+{int(root.winfo_screenheight()/2) - 132}")
 # Set theme
 root.config(bg="#464646")
 ThemedStyle(root).set_theme("equilux")

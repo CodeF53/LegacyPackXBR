@@ -69,9 +69,9 @@ class ManualGUI(tk.Frame):
         # Upscaled Image
         scaled_image = ImageTk.PhotoImage(
             image=Image.new(size=(1, 1), mode="RGBA", color="#000000"))  # temp image, never shown
-        self.scaled_image_label = tk.Label(self, image=scaled_image)
+        self.scaled_image_label = tk.Button(self, image=scaled_image, command=self.open_scaled_image)
         self.scaled_image_label.image = scaled_image
-        self.scaled_image_label.config(bg="#333333")
+        self.scaled_image_label.config(bg="#333333", activebackground = "#333333", relief="flat")
         self.scaled_image_label.grid(column=3, row=1, padx=(0, 30))
 
         # Path to image
@@ -84,12 +84,10 @@ class ManualGUI(tk.Frame):
         # Next image button
         nextButton = ttk.Button(self, text='next', command=self.next_image)
         nextButton.grid(column=2, row=6, columnspan=2, sticky=W + E, padx=30, pady=10)
-
         # Back button
         self.backButton = ttk.Button(self, text='back', command=self.previous_image)
         self.backButton.grid(column=3, row=0, columnspan=2, sticky=W + E, padx=30, pady=10)
         self.backButton["state"] = "disabled"
-
 
     def get_args(self):
         return {
@@ -155,6 +153,10 @@ class ManualGUI(tk.Frame):
     @staticmethod
     def previous_image():
         logic.previous_image()
+
+    @staticmethod
+    def open_scaled_image():
+        logic.open_scaled_image()
 
 
 # the keys of image_processing.tile_dict in order

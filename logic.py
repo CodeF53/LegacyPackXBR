@@ -1,9 +1,11 @@
+from os import startfile
 from shutil import copytree, copy
 from zipfile import ZipFile
 from os.path import isfile, join
 from os import walk, rename, remove
 from glob import glob
 
+# local imports
 from image_processing import process_image
 
 pack_location = ""
@@ -102,4 +104,9 @@ def previous_image():
     global imageIndex
     imageIndex = imageIndex - 2
     initialize_next_image()
+
+
+def open_scaled_image():
+    global img_scaled
+    startfile(img_scaled)
 

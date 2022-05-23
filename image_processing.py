@@ -40,7 +40,7 @@ def process_image(args, img_raw_path, img_scaled_path, scale_factor):
     img_height, img_width = img.shape[0:2]
     crop_height = int(img_height / 3)
     crop_width = int(img_width / 3)
-    img = img[crop_height:img_height - crop_height, crop_height:img_width - crop_width]
+    img = img[crop_height:img_height - crop_height, crop_width:img_width - crop_width]
 
     # save
     Image.fromarray(img).save(img_scaled_path)
@@ -48,7 +48,7 @@ def process_image(args, img_raw_path, img_scaled_path, scale_factor):
 
 def tile_GENERIC(img, direction, width, height, method):
     return np.pad(img, (
-        (direction[0] * height, direction[1] * height), (direction[2] * width, direction[3] * width), (0, 0)), method)
+        (direction[0] * width, direction[1] * width), (direction[2] * height, direction[3] * height), (0, 0)), method)
 
 
 tile_dict = {
@@ -85,10 +85,10 @@ def xbr(input_path, output_path, algorithm, scale_factor):
 
 if __name__ == '__main__':
     args = {
-        "nTile": "mirror",
-        "eTile": "mirror",
-        "sTile": "mirror",
-        "wTile": "mirror",
-        "algorithm": "xbr"
+        "nTile": "void",
+        "eTile": "void",
+        "sTile": "void",
+        "wTile": "void",
+        "algorithm": "xbrz"
     }
-    process_image(args, "test/grass.png", "test/grass_out.png", scale_factor=4)
+    process_image(args, "test/compas.png", "test/compas_out.png", scale_factor=4)

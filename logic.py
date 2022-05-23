@@ -102,3 +102,4 @@ def previous_image():
     global imageIndex
     imageIndex = imageIndex - 2
     initialize_next_image()
+

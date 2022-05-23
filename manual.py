@@ -121,21 +121,25 @@ class ManualGUI(tk.Frame):
         else:
             self.backButton["state"] = "disabled"
 
-        # TODO: fix shit
-        # https://stackoverflow.com/questions/273946/how-do-i-resize-an-image-using-pil-and-maintain-its-aspect-ratio
-        raw_image = ImageTk.PhotoImage(image=Image.open(raw_image_path).resize((256, 256), Image.NEAREST))
-        self.raw_image_label.config(image=raw_image)
+        img_dimensions = Image.open(raw_image_path).size
+        new_width = int((256 * img_dimensions[0] / img_dimensions[1]))
+
+        raw_image = ImageTk.PhotoImage(image=Image.open(raw_image_path).resize((new_width, 256), Image.NEAREST))
+        self.raw_image_label.config(image=raw_image, width=256, height=256)
         self.raw_image_label.image = raw_image
 
-        scaled_image = ImageTk.PhotoImage(image=Image.open(scaled_image_path).resize((256, 256), Image.NEAREST))
-        self.scaled_image_label.config(image=scaled_image)
+        scaled_image = ImageTk.PhotoImage(image=Image.open(scaled_image_path).resize((new_width, 256), Image.NEAREST))
+        self.scaled_image_label.config(image=scaled_image, width=256, height=256)
         self.scaled_image_label.image = scaled_image
 
         self.image_path_label.config(text=raw_image_path.replace(logic.pack_location + "\\", ""))
 
     def update_tile_preview(self, scaled_image_path):
-        tile_preview_image = ImageTk.PhotoImage(image=Image.open(scaled_image_path).resize((96, 96), Image.NEAREST))
-        self.tile_preview_label.config(image=tile_preview_image)
+        img_dimensions = Image.open(scaled_image_path).size
+        new_width = int((96 * img_dimensions[0] / img_dimensions[1]))
+
+        tile_preview_image = ImageTk.PhotoImage(image=Image.open(scaled_image_path).resize((new_width, 96), Image.NEAREST))
+        self.tile_preview_label.config(image=tile_preview_image, width=96, height=96)
         self.tile_preview_label.image = tile_preview_image
 
     # called on pressing the "next" button

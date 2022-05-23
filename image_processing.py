@@ -59,24 +59,12 @@ tile_dict = {
 }
 
 
-# Fixes directories of local files when compiled into auto-py-to-exe
-def resource_path(relative_path):
-    """ Get the absolute path to the resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-
 # Calls ScalerTest_Windows.exe with the proper args
 def xbr(input_path, output_path, algorithm, scale_factor):
     try:
         arguments = f" -{scale_factor}{algorithm} \"{input_path}\" \"{output_path}\""
         subprocess.check_output(  # launch a process with args, pausing current thread until process is finished
-            resource_path("ScalerTest_Windows.exe") +  # call in a way that works with files packed into an exe
+            logic.resource_path("ScalerTest_Windows.exe") +  # call in a way that works with files packed into an exe
             arguments)
     except Exception:
         traceback.print_exc()

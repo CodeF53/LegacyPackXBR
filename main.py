@@ -3,6 +3,7 @@ import tkinter as tk
 from ttkthemes import ThemedStyle
 
 # internal methods
+import logic
 from exit import exit_screen
 from ttkShit import dark_title
 from config import configPage
@@ -39,6 +40,7 @@ root.geometry(f"+{int(root.winfo_screenwidth()/2) - 131}+{int(root.winfo_screenh
 # Set theme
 root.config(bg="#464646")
 ThemedStyle(root).set_theme("equilux")
+root.iconbitmap(logic.resource_path("packXBR.ico"))
 # Dark title bar
 window = dark_title(root)
 

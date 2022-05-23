@@ -1,4 +1,5 @@
-from os import startfile
+import sys
+from os import startfile, path
 from shutil import copytree, copy
 from zipfile import ZipFile
 from os.path import isfile, join
@@ -110,3 +111,13 @@ def open_scaled_image():
     global img_scaled
     startfile(img_scaled)
 
+# Fixes directories of local files when compiled into auto-py-to-exe
+def resource_path(relative_path):
+    """ Get the absolute path to the resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = path.abspath(".")
+
+    return path.join(base_path, relative_path)

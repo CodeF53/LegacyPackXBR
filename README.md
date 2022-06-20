@@ -58,4 +58,4 @@ Credits:
   * A nice tool for comparing many scaling algorithms.
 * Misterk7_-
   * Creator of VanillaXBR, the pack that inspired this.
-    * if you are interested enough to read to here, [you should join the discord](https://discord.gg/jruhHac)
+    * if you are interested enough to read to here, [you should join the discord](https://discord.gg/8N4xzej)

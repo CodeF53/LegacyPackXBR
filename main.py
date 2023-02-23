@@ -8,27 +8,32 @@ from exit import exit_screen
 from ttkShit import dark_title
 from config import configPage
 from manual import ManualGUI
+from auto import AutoGUI
 from logic import init_logic
 
 
 def nextScreen(args, screen):
-    if screen == "config":
-        # Stop rendering
-        configScreen.destroy()
+  if screen == "config":
+    # Stop rendering
+    configScreen.destroy()
 
-        # Initialize internal upscaler
-        init_logic(args, manualScreen)
+    global autoScreen, manualScreen
 
-        if args.get("auto"):
-            raise Exception("auto is not yet implemented for PackXBR GUI")
-        else:
-            manualScreen.pack(expand=1, fill=tk.BOTH)
-    if screen == "manual":
-        # Stop rendering
-        manualScreen.destroy()
+    if args.get("auto"):
+      raise Exception("auto is not yet implemented for PackXBR GUI")
+      # autoScreen = AutoGUI(window, nextScreen)
+      # init_logic(args, autoScreen)
+      # autoScreen.pack(expand=1, fill=tk.BOTH)
+    else:
+      manualScreen = ManualGUI(window, nextScreen)
+      init_logic(args, manualScreen)
+      manualScreen.pack(expand=1, fill=tk.BOTH)
+  if screen == "manual":
+    # Stop rendering
+    manualScreen.destroy()
 
-        # Show exit screen
-        exit_screen(tk.Canvas(window, bg="#464646", borderwidth=0, highlightthickness=0), args).pack(expand=1, fill=tk.BOTH)
+    # Show exit screen
+    exit_screen(tk.Canvas(window, bg="#464646", borderwidth=0, highlightthickness=0), args).pack(expand=1, fill=tk.BOTH)
 
 
 # Establish window parameters
@@ -46,7 +51,6 @@ window = dark_title(root)
 
 configScreen = configPage(tk.Canvas(window, bg="#464646", borderwidth=0, highlightthickness=0), nextScreen)
 configScreen.pack(expand=1, fill=tk.BOTH)
-manualScreen = ManualGUI(window, nextScreen)
 
 if __name__ == '__main__':
-    root.mainloop()
+  root.mainloop()

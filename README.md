@@ -1,5 +1,7 @@
 PackXBR
 ===========================
+Archived in favor of [web-based version](https://github.com/CodeF53/WebPackXBR).
+
 About:
 -------------
 This project is for the automation of the creation of Resource Packs for minecraft, implementing XBR scaling.

@@ -1,6 +1,6 @@
 PackXBR
 ===========================
-Archived in favor of [web-based version](https://github.com/CodeF53/WebPackXBR).
+Archived in favor of [web-based version](https://github.com/CodeF53/PackXBR).
 
 About:
 -------------
